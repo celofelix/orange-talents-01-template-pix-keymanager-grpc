@@ -11,9 +11,9 @@ phases:
       - IMAGE_REPO_NAME=pix-grpc
       - AWS_ACCOUNT_ID="$account_id"
       - AWS_DEFAULT_REGION=sa-east-1
-      - IMAGE_TAG=latest
-      - echo gradle Build `date`
-      - echo Building the Docker Image
+      - IMAGE_TAG=pix-grpc
+      - echo Build `date`
+      - echo Build the Docker image
       - docker build -f Dockerfile -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG .
 
 
