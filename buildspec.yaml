@@ -8,7 +8,7 @@ phases:
     pre_build:
       commands:
         - echo skipped on `date`
-        -
+        - sh gradlew build
 
     build:
       commands:
