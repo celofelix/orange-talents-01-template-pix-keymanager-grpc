@@ -3,21 +3,33 @@ version: 0.2
 phases:
   install:
     runtime-versions:
+      docker: 18
       java: corretto11
     pre_build:
       commands:
         - echo skipped on `date`
+        -
 
     build:
       commands:
-        - echo Gradle Build `date`
-        - java -version
-        - gradle clean build
+        - IMAGE_REPO_NAME=pix-grpc
+        - AWS_ACCOUNT_ID="$account_id"
+        - AWS_DEFAULT_REGION=sa-east-1
+        - IMAGE_TAG=pix-grpc
+        - echo Build `date`
+        - echo Build the Docker image
+        - docker build -f Dockerfile -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG .
 
     post_build:
       commands:
         - echo Build completed on `date`
+        - echo Pushing the Docker image...
+        - echo Logging in to Amazon ECR...
+        - $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
+        - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
+        - printf '[{"name":"pix-keymanager-grpc","imageUri":"%s"}]' $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG > imagedefinitions.json
+        - sh build.sh
 
 artifacts:
   files:
-    - build/libs/*all.jar
+    - imagedefinitions.json
