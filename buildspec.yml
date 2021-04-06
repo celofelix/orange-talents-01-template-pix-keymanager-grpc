@@ -5,6 +5,9 @@ phases:
     runtime-versions:
       docker: 18
       java: corretto11
+    pre_build:
+      commands:
+        - echo skipped on `date`
 
   build:
     commands:
