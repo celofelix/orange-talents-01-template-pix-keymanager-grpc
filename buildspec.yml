@@ -6,15 +6,15 @@ phases:
       docker: 18
       java: corretto11
 
-        build:
-          commands:
-            - IMAGE_REPO_NAME=pix-grpc
-            - AWS_ACCOUNT_ID="$account_id"
-            - AWS_DEFAULT_REGION=sa-east-1
-            - IMAGE_TAG=latest
-            - echo Build `date`
-            - echo Build the Docker image
-            - docker build -f Dockerfile -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG .
+  build:
+    commands:
+      - IMAGE_REPO_NAME=pix-grpc
+      - AWS_ACCOUNT_ID="$account_id"
+      - AWS_DEFAULT_REGION=sa-east-1
+      - IMAGE_TAG=latest
+      - echo gradle Build `date`
+      - echo Building the Docker Image
+      - docker build -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG .
 
 
   post_build:
@@ -26,6 +26,8 @@ phases:
       - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
       - printf '[{"name":"orange-talents-01-template-pix-keymanager-grpc","imageUri":"%s"}]' $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG > imagedefinitions.json
       - sh build.sh
+
+
 
 artifacts:
   files:
