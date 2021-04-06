@@ -10,7 +10,6 @@ phases:
     commands:
       - echo skipped on `date`
       - echo Building project
-      - sh gradlew build
 
   build:
     commands:
