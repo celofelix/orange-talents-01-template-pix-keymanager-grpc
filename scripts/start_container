@@ -1,0 +1,9 @@
+#!/bin/bash
+aws ecr get-login-password --region sa-east-1 | podman login --username AWS --password-stdin 602630227089.dkr.ecr.sa-east-1.amazonaws.com
+
+isExistApp=`podman ps | grep pix-grpc`
+if [[ -n $isExistApp ]]; then
+    podman rm -f pix-grpc && podman run -p 50051:50051 -dt --name pix-grpc 602630227089.dkr.ecr.sa-east-1.amazonaws.com/pix-grpc:latest
+fi
+
+
