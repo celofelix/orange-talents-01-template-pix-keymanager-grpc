@@ -19,8 +19,7 @@ phases:
       - IMAGE_TAG=latest
       - echo gradle Build `date`
       - echo Building the Docker Image
-      - docker build -t pix-grpc .
-      - docker tag pix-grpc:latest 602630227089.dkr.ecr.sa-east-1.amazonaws.com/pix-grpc:latest
+      - docker build -f Dockerfile -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG .
 
 
   post_build:
@@ -29,7 +28,7 @@ phases:
       - echo Pushing the Docker image...
       - echo Loggin in to Amazon ECR...
       - $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
-      - docker push 602630227089.dkr.ecr.sa-east-1.amazonaws.com/pix-grpc:latest
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
       - printf '[{"name":"orange-talents-01-template-pix-keymanager-grpc","imageUri":"%s"}]' $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG > imagedefinitions.json
       - sh build.sh
 
