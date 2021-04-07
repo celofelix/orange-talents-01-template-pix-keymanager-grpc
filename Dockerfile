@@ -1,5 +1,5 @@
 FROM openjdk:11
-# ARG JAR_FILE=build/libs/*all.jar
-COPY  ./build/libs/*all.jar app.jar
+ARG JAR_FILE=build/libs/*all.jar
+COPY build/libs/*all.jar key-manager.jar
 EXPOSE 50051
-ENTRYPOINT ["java","-jar","/app.jar"]
+ENTRYPOINT ["java","-jar","/key-manager.jar"]
