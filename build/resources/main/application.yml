@@ -1,0 +1,28 @@
+micronaut:
+  application:
+    name: keyManagerGrpc
+
+itau:
+  url: ${URL_ITAU:`http://localhost:9091`}
+bcb:
+  url: ${URL_BCB:`http://localhost:8082`}
+
+datasources:
+  default:
+    url: jdbc:mysql://${BD_URL:localhost}:3306/chave_pix?useTimezone=true&serverTimezone=UTC
+    username: root
+    password: ${BD_PASSWORD:Celo@15204426}
+
+jpa:
+  default:
+    properties:
+      hibernate:
+        hbm2ddl:
+          auto: update
+        show_sql: true
+        format_sql: true
+
+
+
+
+
