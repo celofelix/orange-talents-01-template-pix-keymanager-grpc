@@ -1,5 +1,5 @@
 FROM openjdk:11
 # ARG JAR_FILE=build/libs/*all.jar
-COPY build/libs/*all.jar app.jar
+COPY  ./build/libs/*all.jar app.jar
 EXPOSE 50051
 ENTRYPOINT ["java","-jar","/app.jar"]
