@@ -51,7 +51,7 @@ class CadastraPixEndPointTest(
     }
 
     @Test
-    fun `deve cadastrar chave pix`() {
+    fun `deve cadastrar nova chave pix`() {
 
         /* Simulando o comportamento do client do Itau para buscar os dados bancários */
         Mockito.`when`(itauClient.buscaConta(clientId = CLIENTE_ID.toString(), tipo = "CONTA_CORRENTE"))
@@ -79,11 +79,13 @@ class CadastraPixEndPointTest(
     }
 
     @Test
-    fun `nao deve salvao chave existente`() {
+    fun `nao deve salvar chave pix ja existente`() {
         /* Simulando uma chave salva no banco */
         repository.save(chave())
 
-        /* Executando a requisição para o endpoint e salvando a excepção em uma variavel
+        /* Executando a requisição para o endpoint e usando o assertThrows
+        O assertThrows irá checar a exceção lançada pelo grpc
+        Guardando o retorno da exceção na variavel para ser verificada
         Deve ser a StatusRunTimeException pq é o tipo de exception que o grpc lança */
         val assertThrow = assertThrows<StatusRuntimeException> {
             grpcCliente.registra(
@@ -96,10 +98,40 @@ class CadastraPixEndPointTest(
             )
         }
 
-        /* Verificando se o erro está de lançando exceção de ALREADY_EXISTS */
+        /* Verificando se o erro lançado na chamada do endpoint
+        O código do status deve o mapeado no ALREADY_EXISTS
+        O mapeamento foi feito dentro da ChaveExistenteExceptionHandler */
         with(assertThrow) {
             Assertions.assertEquals(Status.ALREADY_EXISTS.code, status.code)
             Assertions.assertEquals("A chave informada marcelo@gmail.com já foi cadastrada", status.description)
+        }
+    }
+
+    @Test
+    fun `nao deve cadastrar pix se os dados bancarios nao existirem`() {
+
+        /*Simulando o corportamente de busca do cliente Itau com retorno de não encontrada */
+        Mockito.`when`(itauClient.buscaConta(CLIENTE_ID.toString(), "CONTA_CORRENTE"))
+            .thenReturn(HttpResponse.notFound())
+
+        /* Silumando a requisição para o endpoint com o retorno de  */
+        val assertThrow = assertThrows<StatusRuntimeException> {
+            grpcCliente.registra(
+                CadastraChavePixRequest.newBuilder()
+                    .setClienteId(CLIENTE_ID.toString())
+                    .setTipoDeChave(TipoDeChave.EMAIL)
+                    .setChave("marcelo@gmail.com")
+                    .setTipoDeConta(TipoDeConta.CONTA_CORRENTE)
+                    .build()
+            )
+        }
+
+        /* Verificando se o erro lançado na chamada do endpoint
+        O código do status deve o mapeado no ALREADY_EXISTS
+        O mapeamento foi feito dentro da ContaNaoExistenteHandler */
+        with(assertThrow) {
+            Assertions.assertEquals(Status.NOT_FOUND.code, status.code)
+            Assertions.assertEquals("Conta do usuário não foi encontrada", status.description)
         }
     }
 

@@ -34,7 +34,7 @@ class NovaChaveService(
             .buscaConta(novaChave.clienteId!!, novaChave.tipoDeConta!!.name)
 
         val conta = contaResponse.body()?.toModel()
-            ?: throw ContaNaoExistenteException("Conta para o usuário não foi encontrada")
+            ?: throw ContaNaoExistenteException("Conta do usuário não foi encontrada")
 
         val pix = novaChave.toModel(conta)
         pixRepository.save(pix)

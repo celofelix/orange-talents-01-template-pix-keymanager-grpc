@@ -41,7 +41,7 @@
 </td>
 <td>
 <div class="infoBox" id="duration">
-<div class="counter">1.163s</div>
+<div class="counter">1.198s</div>
 <p>duration</p>
 </div>
 </td>
@@ -78,8 +78,8 @@
 </tr>
 </thead>
 <tr>
-<td class="success">nao deve salvao chave existente()</td>
-<td class="success">1.163s</td>
+<td class="success">nao deve cadastrar pix se os dados bancarios nao existirem()</td>
+<td class="success">1.198s</td>
 <td class="success">passed</td>
 </tr>
 </table>
@@ -87,13 +87,13 @@
 <div id="tab1" class="tab">
 <h2>Standard output</h2>
 <span class="code">
-<pre>?[36m12:16:44.760?[0;39m ?[1;30m[Test worker]?[0;39m ?[34mINFO ?[0;39m ?[35mi.m.context.env.DefaultEnvironment?[0;39m - Established active environments: [test]
-?[36m12:16:45.896?[0;39m ?[1;30m[Test worker]?[0;39m ?[34mINFO ?[0;39m ?[35mo.h.validator.internal.util.Version?[0;39m - HV000001: Hibernate Validator 6.1.6.Final
-?[36m12:16:46.114?[0;39m ?[1;30m[Test worker]?[0;39m ?[34mINFO ?[0;39m ?[35mcom.zaxxer.hikari.HikariDataSource?[0;39m - HikariPool-1 - Starting...
-?[36m12:16:46.323?[0;39m ?[1;30m[Test worker]?[0;39m ?[34mINFO ?[0;39m ?[35mcom.zaxxer.hikari.HikariDataSource?[0;39m - HikariPool-1 - Start completed.
-?[36m12:16:46.351?[0;39m ?[1;30m[Test worker]?[0;39m ?[34mINFO ?[0;39m ?[35morg.hibernate.Version?[0;39m - HHH000412: Hibernate ORM core version 5.4.24.Final
-?[36m12:16:46.583?[0;39m ?[1;30m[Test worker]?[0;39m ?[34mINFO ?[0;39m ?[35mo.h.annotations.common.Version?[0;39m - HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
-?[36m12:16:46.810?[0;39m ?[1;30m[Test worker]?[0;39m ?[34mINFO ?[0;39m ?[35morg.hibernate.dialect.Dialect?[0;39m - HHH000400: Using dialect: org.hibernate.dialect.H2Dialect
+<pre>?[36m12:58:27.969?[0;39m ?[1;30m[Test worker]?[0;39m ?[34mINFO ?[0;39m ?[35mi.m.context.env.DefaultEnvironment?[0;39m - Established active environments: [test]
+?[36m12:58:29.167?[0;39m ?[1;30m[Test worker]?[0;39m ?[34mINFO ?[0;39m ?[35mo.h.validator.internal.util.Version?[0;39m - HV000001: Hibernate Validator 6.1.6.Final
+?[36m12:58:29.388?[0;39m ?[1;30m[Test worker]?[0;39m ?[34mINFO ?[0;39m ?[35mcom.zaxxer.hikari.HikariDataSource?[0;39m - HikariPool-1 - Starting...
+?[36m12:58:29.598?[0;39m ?[1;30m[Test worker]?[0;39m ?[34mINFO ?[0;39m ?[35mcom.zaxxer.hikari.HikariDataSource?[0;39m - HikariPool-1 - Start completed.
+?[36m12:58:29.632?[0;39m ?[1;30m[Test worker]?[0;39m ?[34mINFO ?[0;39m ?[35morg.hibernate.Version?[0;39m - HHH000412: Hibernate ORM core version 5.4.24.Final
+?[36m12:58:29.895?[0;39m ?[1;30m[Test worker]?[0;39m ?[34mINFO ?[0;39m ?[35mo.h.annotations.common.Version?[0;39m - HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+?[36m12:58:30.094?[0;39m ?[1;30m[Test worker]?[0;39m ?[34mINFO ?[0;39m ?[35morg.hibernate.dialect.Dialect?[0;39m - HHH000400: Using dialect: org.hibernate.dialect.H2Dialect
 Hibernate: 
     
     create table pix (
@@ -124,22 +124,15 @@ Hibernate:
     from
         pix
 Hibernate: 
-    insert 
-    into
-        pix
-        (id, chave, cliente_id, agencia, cpf, instituicao, ispb, nome, numero, criada_em, tipo_de_chave, tipo_de_conta) 
-    values
-        (null, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-Hibernate: 
     select
         pix0_.id as col_0_0_ 
     from
         pix pix0_ 
     where
         pix0_.chave=?
-?[36m12:16:49.382?[0;39m ?[1;30m[io-executor-thread-1]?[0;39m ?[1;31mERROR?[0;39m ?[35mb.c.z.p.e.ExceptionHandlerInterceptor?[0;39m - Handling the exception 'br.com.zup.pix.excecoes.ChaveExistenteException' while processing the call: public void br.com.zup.pix.cadastra.CadastraPixEndPoint.registra(br.com.zup.CadastraChavePixRequest,io.grpc.stub.StreamObserver)
-br.com.zup.pix.excecoes.ChaveExistenteException: A chave informada marcelo@gmail.com já foi cadastrada
-	at br.com.zup.pix.cadastra.NovaChaveService.registra(NovaChaveService.kt:30)
+?[36m12:58:32.617?[0;39m ?[1;30m[io-executor-thread-1]?[0;39m ?[1;31mERROR?[0;39m ?[35mb.c.z.p.e.ExceptionHandlerInterceptor?[0;39m - Handling the exception 'br.com.zup.pix.excecoes.ContaNaoExistenteException' while processing the call: public void br.com.zup.pix.cadastra.CadastraPixEndPoint.registra(br.com.zup.CadastraChavePixRequest,io.grpc.stub.StreamObserver)
+br.com.zup.pix.excecoes.ContaNaoExistenteException: Conta do usuário não foi encontrada
+	at br.com.zup.pix.cadastra.NovaChaveService.registra(NovaChaveService.kt:37)
 	at br.com.zup.pix.cadastra.$NovaChaveServiceDefinition$Intercepted.$$access$$registra(Unknown Source)
 	at br.com.zup.pix.cadastra.$NovaChaveServiceDefinition$$exec1.invokeInternal(Unknown Source)
 	at io.micronaut.context.AbstractExecutableMethod.invoke(AbstractExecutableMethod.java:151)
@@ -167,8 +160,8 @@ br.com.zup.pix.excecoes.ChaveExistenteException: A chave informada marcelo@gmail
 	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1130)
 	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:630)
 	at java.base/java.lang.Thread.run(Thread.java:832)
-?[36m12:16:49.428?[0;39m ?[1;30m[Test worker]?[0;39m ?[34mINFO ?[0;39m ?[35mcom.zaxxer.hikari.HikariDataSource?[0;39m - HikariPool-1 - Shutdown initiated...
-?[36m12:16:49.430?[0;39m ?[1;30m[Test worker]?[0;39m ?[34mINFO ?[0;39m ?[35mcom.zaxxer.hikari.HikariDataSource?[0;39m - HikariPool-1 - Shutdown completed.
+?[36m12:58:32.669?[0;39m ?[1;30m[Test worker]?[0;39m ?[34mINFO ?[0;39m ?[35mcom.zaxxer.hikari.HikariDataSource?[0;39m - HikariPool-1 - Shutdown initiated...
+?[36m12:58:32.671?[0;39m ?[1;30m[Test worker]?[0;39m ?[34mINFO ?[0;39m ?[35mcom.zaxxer.hikari.HikariDataSource?[0;39m - HikariPool-1 - Shutdown completed.
 </pre>
 </span>
 </div>
@@ -180,7 +173,7 @@ br.com.zup.pix.excecoes.ChaveExistenteException: A chave informada marcelo@gmail
 <input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
 </label>
 </div>Generated by 
-<a href="http://www.gradle.org">Gradle 6.8</a> at 8 de abr. de 2021 12:16:49</p>
+<a href="http://www.gradle.org">Gradle 6.8</a> at 8 de abr. de 2021 12:58:33</p>
 </div>
 </div>
 </body>
