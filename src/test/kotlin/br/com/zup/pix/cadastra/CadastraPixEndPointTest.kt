@@ -44,7 +44,7 @@ class CadastraPixEndPointTest(
         val CLIENTE_ID: UUID = UUID.randomUUID()
     }
 
-    /* Para deletar os registros da banco antes de método de teste */
+    /* Para deletar os registros da banco antes de cada método de teste */
     @BeforeEach
     fun set() {
         repository.deleteAll()
@@ -132,6 +132,23 @@ class CadastraPixEndPointTest(
         with(assertThrow) {
             Assertions.assertEquals(Status.NOT_FOUND.code, status.code)
             Assertions.assertEquals("Conta do usuário não foi encontrada", status.description)
+        }
+    }
+
+    @Test
+    fun `nao deve registrar chave pix com parametros invalidos`() {
+
+        /* Simulando o envio de um objeto vazio sem os parâmetros */
+        val assertThrow = assertThrows<StatusRuntimeException> {
+            grpcCliente.registra(
+                CadastraChavePixRequest.newBuilder()
+                    .build()
+            )
+        }
+
+        with(assertThrow) {
+            Assertions.assertEquals(Status.INVALID_ARGUMENT.code, status.code)
+            Assertions.assertEquals("Dados inválidos", status.description)
         }
     }
 
