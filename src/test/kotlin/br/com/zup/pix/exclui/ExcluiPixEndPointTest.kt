@@ -58,10 +58,19 @@ class ExcluiPixEndPointTest(
         /* Simulando o corportamento de exclusão do cliente BCB
         Com retorno de resposta da exclusão */
 
-        Mockito.`when`(bcbClient.deleta( chave = "marcelo@gmail.com",
+        Mockito.`when`(
+            bcbClient.deleta(
+                chave = "marcelo@gmail.com",
                 DeletePixKeyRequest(key = "marcelo@gmail.com", participant = "60701190")
-            )) .thenReturn(HttpResponse.ok(DeletePixKeyResponse(key = "marcelo@gmail.com",
-                        participant = "60701190", deletedAt = LocalDateTime.now())))
+            )
+        ).thenReturn(
+            HttpResponse.ok(
+                DeletePixKeyResponse(
+                    key = "marcelo@gmail.com",
+                    participant = "60701190", deletedAt = LocalDateTime.now()
+                )
+            )
+        )
 
         /* Executando a execução da requisção para exclusão da chave */
         val excluiResponse = grpcClient.exclui(
@@ -91,21 +100,6 @@ class ExcluiPixEndPointTest(
             return KeyManagerExcluiGrpcServiceGrpc.newBlockingStub(channel)
         }
     }
-
-//    private fun deletePixRequest(): DeletePixKeyRequest {
-//        return DeletePixKeyRequest(
-//            key = "marcelo@gmailcom",
-//            participant = "60701190"
-//        )
-//    }
-//
-//    private fun deletePixResponse(): DeletePixKeyResponse {
-//        return DeletePixKeyResponse(
-//            key = "marcelo@gmailcom",
-//            participant = "60701190",
-//            deletedAt = LocalDateTime.now()
-//        )
-//    }
 
     private fun pix(): Pix {
         return Pix(
