@@ -7,10 +7,11 @@ import br.com.zup.TipoDeConta
 import br.com.zup.pix.bcb.*
 import br.com.zup.pix.clients.BancoCentralClient
 import br.com.zup.pix.clients.ContasClientesItauClient
-import br.com.zup.pix.itau.ContaResponse
-import br.com.zup.pix.itau.InstituicaoResponse
-import br.com.zup.pix.itau.TitularResponse
+import br.com.zup.pix.itau.*
+import br.com.zup.pix.repositories.PixRepository
 import io.grpc.ManagedChannel
+import io.grpc.Status
+import io.grpc.StatusRuntimeException
 import io.micronaut.context.annotation.Bean
 import io.micronaut.context.annotation.Factory
 import io.micronaut.grpc.annotation.GrpcChannel
@@ -19,7 +20,9 @@ import io.micronaut.http.HttpResponse
 import io.micronaut.test.annotation.MockBean
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
 import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.mockito.Mockito
 import java.time.LocalDateTime
 import java.util.*
@@ -27,6 +30,7 @@ import javax.inject.Inject
 
 @MicronautTest(transactional = false)
 class CadastraPixEndPointTest(
+    val repository: PixRepository,
     val grpcCliente: KeyManagerCadastraGrpcServiceGrpc.KeyManagerCadastraGrpcServiceBlockingStub
 ) {
 
@@ -38,6 +42,12 @@ class CadastraPixEndPointTest(
 
     companion object {
         val CLIENTE_ID: UUID = UUID.randomUUID()
+    }
+
+    /* Para deletar os registros da banco antes de método de teste */
+    @BeforeEach
+    fun set() {
+        repository.deleteAll()
     }
 
     @Test
@@ -65,6 +75,31 @@ class CadastraPixEndPointTest(
         with(response) {
             Assertions.assertEquals(CLIENTE_ID.toString(), clienteId)
             Assertions.assertNotNull(pixId)
+        }
+    }
+
+    @Test
+    fun `nao deve salvao chave existente`() {
+        /* Simulando uma chave salva no banco */
+        repository.save(chave())
+
+        /* Executando a requisição para o endpoint e salvando a excepção em uma variavel
+        Deve ser a StatusRunTimeException pq é o tipo de exception que o grpc lança */
+        val assertThrow = assertThrows<StatusRuntimeException> {
+            grpcCliente.registra(
+                CadastraChavePixRequest.newBuilder()
+                    .setClienteId(CLIENTE_ID.toString())
+                    .setTipoDeChave(TipoDeChave.EMAIL)
+                    .setChave("marcelo@gmail.com")
+                    .setTipoDeConta(TipoDeConta.CONTA_CORRENTE)
+                    .build()
+            )
+        }
+
+        /* Verificando se o erro está de lançando exceção de ALREADY_EXISTS */
+        with(assertThrow) {
+            Assertions.assertEquals(Status.ALREADY_EXISTS.code, status.code)
+            Assertions.assertEquals("A chave informada marcelo@gmail.com já foi cadastrada", status.description)
         }
     }
 
@@ -136,6 +171,23 @@ class CadastraPixEndPointTest(
         fun stub(@GrpcChannel(GrpcServerChannel.NAME) channel: ManagedChannel): KeyManagerCadastraGrpcServiceGrpc.KeyManagerCadastraGrpcServiceBlockingStub {
             return KeyManagerCadastraGrpcServiceGrpc.newBlockingStub(channel)
         }
+    }
+
+    private fun chave(): Pix {
+        return Pix(
+            clienteId = CLIENTE_ID,
+            tipoDeChave = TipoChave.EMAIL,
+            chave = "marcelo@gmail.com",
+            tipoDeConta = TipoConta.CONTA_CORRENTE,
+            conta = Conta(
+                instituicao = "ITAÚ UNIBANCO S.A.",
+                ispb = "60701190",
+                agencia = "0001",
+                numero = "291900",
+                nome = "Marcelo Felix",
+                cpf = "02467781054"
+            )
+        )
     }
 }
 
