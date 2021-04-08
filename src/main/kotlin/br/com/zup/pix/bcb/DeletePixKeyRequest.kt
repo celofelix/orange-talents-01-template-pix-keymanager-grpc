@@ -1,6 +1,6 @@
 package br.com.zup.pix.bcb
 
-class DeletePixKeyRequest(
+data class DeletePixKeyRequest(
     val key: String,
     val participant: String
 )

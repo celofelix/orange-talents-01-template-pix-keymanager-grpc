@@ -2,12 +2,12 @@ package br.com.zup.pix.cadastra
 
 import br.com.zup.pix.bcb.CreatePixKeyRequest
 import br.com.zup.pix.clients.BancoCentralClient
-import br.com.zup.pix.repositories.PixRepository
 import br.com.zup.pix.clients.ContasClientesItauClient
 import br.com.zup.pix.excecoes.ChaveExistenteException
 import br.com.zup.pix.excecoes.ContaNaoExistenteException
 import br.com.zup.pix.itau.NovaChave
 import br.com.zup.pix.itau.Pix
+import br.com.zup.pix.repositories.PixRepository
 import io.micronaut.http.HttpStatus
 import io.micronaut.validation.Validated
 import javax.inject.Inject
@@ -19,13 +19,14 @@ import javax.validation.Valid
 @Singleton
 class NovaChaveService(
     @Inject val contasItauClient: ContasClientesItauClient,
-    @Inject val chaveRepository: PixRepository,
+    @Inject val pixRepository: PixRepository,
     @Inject val bcbClient: BancoCentralClient
 ) {
+
     @Transactional
     fun registra(@Valid novaChave: NovaChave): Pix {
 
-        if (chaveRepository.existsByChave(novaChave.chave!!)) {
+        if (pixRepository.existsByChave(novaChave.chave!!)) {
             throw ChaveExistenteException("A chave informada ${novaChave.chave} já foi cadastrada")
         }
 
@@ -36,7 +37,7 @@ class NovaChaveService(
             ?: throw ContaNaoExistenteException("Conta para o usuário não foi encontrada")
 
         val pix = novaChave.toModel(conta)
-        chaveRepository.save(pix)
+        pixRepository.save(pix)
 
         val bcbRequest = CreatePixKeyRequest.toRequest(pix = pix)
 

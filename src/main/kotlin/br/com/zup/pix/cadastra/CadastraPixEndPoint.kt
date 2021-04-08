@@ -17,7 +17,9 @@ class CadastraPixEndPoint(@Inject val service: NovaChaveService) :
         request: CadastraChavePixRequest,
         responseObserver: StreamObserver<CadastraChavePixResponse>
     ) {
+
         val novaChave = request.toModel()
+
         val chaveCriada = service.registra(novaChave)
 
         responseObserver.onNext(

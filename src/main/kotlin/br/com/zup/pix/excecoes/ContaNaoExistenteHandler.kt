@@ -6,8 +6,8 @@ import javax.inject.Singleton
 @Singleton
 class ContaNaoExistenteHandler : ExceptionHandler<ContaNaoExistenteException> {
 
-    override fun handle(e: ContaNaoExistenteException): ExceptionHandler.StatusWrapper {
-        return ExceptionHandler.StatusWrapper(
+    override fun handle(e: ContaNaoExistenteException): ExceptionHandler.StatusWithDetails {
+        return ExceptionHandler.StatusWithDetails(
             Status.NOT_FOUND
                 .withDescription(e.message)
                 .withCause(e)

@@ -6,8 +6,8 @@ import javax.inject.Singleton
 @Singleton
 class ChaveExistenteExceptionHandler : ExceptionHandler<ChaveExistenteException> {
 
-    override fun handle(e: ChaveExistenteException): ExceptionHandler.StatusWrapper {
-        return ExceptionHandler.StatusWrapper(
+    override fun handle(e: ChaveExistenteException): ExceptionHandler.StatusWithDetails {
+        return ExceptionHandler.StatusWithDetails(
             Status.ALREADY_EXISTS
                 .withDescription(e.message)
                 .withCause(e)
