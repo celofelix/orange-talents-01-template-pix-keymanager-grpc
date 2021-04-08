@@ -24,10 +24,10 @@ class ExcluiPixService(
 
     @Transactional
     fun remove(
-        @NotBlank @NotNull pixId: String?,
+        @NotBlank @NotNull pixId: String,
         @NotBlank @ValidUUID(message = "ID do cliente está em formato inválido e preenchido") clienteId: String?
     ) {
-        val idPix = pixId?.toLong()
+        val idPix = pixId.toLong()
         val idCliente = UUID.fromString(clienteId)
 
         val pix = pixRepository.findByIdAndClienteId(idPix, idCliente)
@@ -35,12 +35,14 @@ class ExcluiPixService(
             throw ContaNaoExistenteException("Chave Pix informada não existe ou não pertence ao cliente informado")
         }
 
-        pixRepository.deleteById(idPix!!)
+        pixRepository.deleteById(idPix)
 
         val deleteRequest = DeletePixKeyRequest(pix.get().chave, pix.get().conta.ispb)
 
         val deleteResponse = bcbClient
             .deleta(chave = pix.get().chave, request = deleteRequest)
+
+        println(deleteResponse)
 
         if (deleteResponse.status != HttpStatus.OK) {
             throw ChaveNaoExistenteException("Ocorreu um erro ao deletar a sua chave pix no Banco Central")

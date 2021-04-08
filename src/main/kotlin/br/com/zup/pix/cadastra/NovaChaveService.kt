@@ -5,6 +5,7 @@ import br.com.zup.pix.clients.BancoCentralClient
 import br.com.zup.pix.clients.ContasClientesItauClient
 import br.com.zup.pix.excecoes.ChaveExistenteException
 import br.com.zup.pix.excecoes.ContaNaoExistenteException
+import br.com.zup.pix.excecoes.ErrorHandler
 import br.com.zup.pix.itau.NovaChave
 import br.com.zup.pix.itau.Pix
 import br.com.zup.pix.repositories.PixRepository

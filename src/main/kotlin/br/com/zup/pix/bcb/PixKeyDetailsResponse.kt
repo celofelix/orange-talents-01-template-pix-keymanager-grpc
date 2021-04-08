@@ -6,7 +6,7 @@ import br.com.zup.pix.itau.TipoChave
 import br.com.zup.pix.itau.TipoConta
 import java.time.LocalDateTime
 
-class PixKeyDetailsResponse(
+data class PixKeyDetailsResponse(
     val keyType: KeyType,
     val key: String,
     val bankAccount: BankAccount,
