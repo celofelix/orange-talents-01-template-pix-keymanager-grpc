@@ -20,6 +20,8 @@ import io.micronaut.grpc.server.GrpcServerChannel
 import io.micronaut.http.HttpResponse
 import io.micronaut.test.annotation.MockBean
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
+import junit.framework.AssertionFailedError
+import org.hamcrest.MatcherAssert
 import org.junit.jupiter.api.*
 import org.mockito.Mockito
 import java.time.LocalDateTime
@@ -146,6 +148,23 @@ class ExcluiPixEndPointTest(
             )
         }
 
+    }
+
+    @Test
+    fun `nao deve excluir com parametros da requisicao invalidos`() {
+
+        /* Enviando uma requisição com os parâmetros vázios
+        Será lançado uma exceção e está sendo guardada na variável para validação */
+        val assertThrow = assertThrows<StatusRuntimeException> {
+            grpcClient.exclui(ExcluiChavePixRequest.newBuilder().build())
+        }
+
+        /* Validando a exceção lançada pelo gRPC. Deve ser exceção INVALID_ARGUMENT
+        A exceção é capturada pela ConstraintViolationExceptionHandler */
+        with(assertThrow) {
+            Assertions.assertEquals(Status.INVALID_ARGUMENT.code, status.code)
+            Assertions.assertEquals("Dados inválidos", status.description)
+        }
     }
 
     @MockBean(BancoCentralClient::class)
