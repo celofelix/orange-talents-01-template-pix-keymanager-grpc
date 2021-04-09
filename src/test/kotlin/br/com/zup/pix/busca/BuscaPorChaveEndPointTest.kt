@@ -2,6 +2,7 @@ package br.com.zup.pix.busca
 
 import br.com.zup.BuscaPorChavePixRequest
 import br.com.zup.KeyManagerBuscaChaveGrpcServiceGrpc
+import br.com.zup.pix.bcb.*
 import br.com.zup.pix.clients.BancoCentralClient
 import br.com.zup.pix.itau.Conta
 import br.com.zup.pix.itau.Pix
@@ -13,6 +14,7 @@ import io.micronaut.context.annotation.Bean
 import io.micronaut.context.annotation.Factory
 import io.micronaut.grpc.annotation.GrpcChannel
 import io.micronaut.grpc.server.GrpcServerChannel
+import io.micronaut.http.HttpResponse
 import io.micronaut.test.annotation.MockBean
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
 import org.junit.jupiter.api.AfterEach
@@ -20,13 +22,14 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
+import java.time.LocalDateTime
 import java.util.*
 import javax.inject.Inject
 
 @MicronautTest(transactional = false)
 class BuscaPorChaveEndPointTest(
-    val repository: PixRepository,
-    val grpcClient: KeyManagerBuscaChaveGrpcServiceGrpc.KeyManagerBuscaChaveGrpcServiceBlockingStub
+    private val repository: PixRepository,
+    private val grpcClient: KeyManagerBuscaChaveGrpcServiceGrpc.KeyManagerBuscaChaveGrpcServiceBlockingStub
 
 ) {
 
@@ -82,6 +85,34 @@ class BuscaPorChaveEndPointTest(
         }
     }
 
+    @Test
+    fun `deve buscar chave no servico do BCB e nao localmente`() {
+
+        val pixResponse = pixKeyDetailsResponse()
+
+        Mockito.`when`(bcbClient.buscaPorChave("chaveoutrobanco@gmail.com"))
+            .thenReturn(
+                HttpResponse.ok(pixResponse)
+            )
+
+        val buscaPorChave = grpcClient.buscaPorChave(
+            BuscaPorChavePixRequest.newBuilder()
+                .setChave("chaveoutrobanco@gmail.com")
+                .build()
+        )
+
+        with(buscaPorChave) {
+            Assertions.assertEquals(pixResponse.keyType.name, tipoDeChave)
+            Assertions.assertEquals(pixResponse.key, chave)
+            Assertions.assertEquals(pixResponse.owner.name, conta.titular)
+            Assertions.assertEquals(pixResponse.owner.taxIdNumber, conta.cpf)
+            Assertions.assertEquals(pixResponse.bankAccount.participant, conta.instituicao)
+            Assertions.assertEquals(pixResponse.bankAccount.branch, conta.agencia)
+            Assertions.assertEquals(pixResponse.bankAccount.accountNumber, conta.numeroConta)
+        }
+
+    }
+
     @MockBean(BancoCentralClient::class)
     fun bcbClient(): BancoCentralClient {
         return Mockito.mock(BancoCentralClient::class.java)
@@ -111,6 +142,25 @@ class BuscaPorChaveEndPointTest(
                 nome = "Marcelo Felix",
                 cpf = "02467781054"
             )
+        )
+    }
+
+    private fun pixKeyDetailsResponse(): PixKeyDetailsResponse {
+        return PixKeyDetailsResponse(
+            keyType = KeyType.EMAIL,
+            key = "chaveoutrobanco@gmail.com",
+            bankAccount = BankAccount(
+                participant = "60701190",
+                branch = "0001",
+                accountNumber = "291900",
+                accountType = AccountType.CACC
+            ),
+            owner = Owner(
+                type = Owner.OwnerType.NATURAL_PERSON,
+                name = "Marcelo Felix",
+                taxIdNumber = "02467781054"
+            ),
+            createdAt = LocalDateTime.now()
         )
     }
 }
