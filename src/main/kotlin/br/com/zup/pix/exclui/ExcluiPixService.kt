@@ -45,7 +45,7 @@ class ExcluiPixService(
         println(deleteResponse)
 
         if (deleteResponse.status != HttpStatus.OK) {
-            throw ChaveNaoExistenteException("Ocorreu um erro ao deletar a sua chave pix no Banco Central")
+            throw ChaveNaoExistenteException("Não foi possível deletar a sua chave pix no Banco Central")
         }
     }
 }

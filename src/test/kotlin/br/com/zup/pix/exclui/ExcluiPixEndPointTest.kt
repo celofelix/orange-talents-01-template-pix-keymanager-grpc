@@ -11,6 +11,8 @@ import br.com.zup.pix.itau.TipoChave
 import br.com.zup.pix.itau.TipoConta
 import br.com.zup.pix.repositories.PixRepository
 import io.grpc.ManagedChannel
+import io.grpc.Status
+import io.grpc.StatusRuntimeException
 import io.micronaut.context.annotation.Bean
 import io.micronaut.context.annotation.Factory
 import io.micronaut.grpc.annotation.GrpcChannel
@@ -18,10 +20,7 @@ import io.micronaut.grpc.server.GrpcServerChannel
 import io.micronaut.http.HttpResponse
 import io.micronaut.test.annotation.MockBean
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.*
 import org.mockito.Mockito
 import java.time.LocalDateTime
 import java.util.*
@@ -55,9 +54,8 @@ class ExcluiPixEndPointTest(
     @Test
     fun `deve excluir uma chave existente`() {
 
-        /* Simulando o corportamento de exclusão do cliente BCB
+        /* Simulando o corportamento de exclusão do serviço BCB
         Com retorno de resposta da exclusão */
-
         Mockito.`when`(
             bcbClient.deleta(
                 chave = "marcelo@gmail.com",
@@ -72,7 +70,7 @@ class ExcluiPixEndPointTest(
             )
         )
 
-        /* Executando a execução da requisção para exclusão da chave */
+        /* Executando a requisção no endpoint para exclusão da chave */
         val excluiResponse = grpcClient.exclui(
             ExcluiChavePixRequest.newBuilder()
                 .setPixId(chave.id.toString())
@@ -84,6 +82,41 @@ class ExcluiPixEndPointTest(
         with(excluiResponse) {
             Assertions.assertEquals(chave.id.toString(), pixId)
             Assertions.assertEquals(chave.clienteId.toString(), clienteId)
+        }
+    }
+
+    @Test
+    fun `nao deve remover chave pix se ocorrer erro no servico bcb`() {
+
+        /* Simulando o comportamento de exclusão do serviço do BCB
+        Retornando uma exceção para simular uma chave não existente no BCB */
+        Mockito.`when`(
+            bcbClient.deleta(
+                chave = "marcelo@gmail.com",
+                DeletePixKeyRequest(key = "marcelo@gmail.com", participant = "60701190")
+            )
+        ).thenReturn(HttpResponse.unprocessableEntity())
+
+        /* Executando a requisição no endpoint para exclusão
+        Usando o assertThrows para receber o retorno do da exceção
+        Deve ser usado o StatusRuntimeException, essa é a exceção lançada pelo grpc */
+        val assertThrow = assertThrows<StatusRuntimeException> {
+            grpcClient.exclui(
+                ExcluiChavePixRequest.newBuilder()
+                    .setPixId(chave.id.toString())
+                    .setClienteId(chave.clienteId.toString())
+                    .build()
+            )
+        }
+
+        /* Validando o status da exceção lançada no endpoint
+        O status code está mapeado na classe ChaveNaoExistenteHandler */
+        with(assertThrow) {
+            Assertions.assertEquals(Status.NOT_FOUND.code, status.code)
+            Assertions.assertEquals(
+                "Não foi possível deletar a sua chave pix no Banco Central",
+                status.description
+            )
         }
     }
 
