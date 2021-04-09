@@ -7,7 +7,6 @@ import javax.inject.Singleton
 import javax.validation.ConstraintViolationException
 
 @Singleton
-
 class ConstraintViolationExceptionHandler : ExceptionHandler<ConstraintViolationException> {
     override fun handle(e: ConstraintViolationException): ExceptionHandler.StatusWithDetails {
 

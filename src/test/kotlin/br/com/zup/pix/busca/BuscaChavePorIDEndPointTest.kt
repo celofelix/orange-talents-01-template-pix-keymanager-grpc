@@ -89,8 +89,26 @@ class BuscaChavePorIDEndPointTest(
                 status.description
             )
         }
+    }
 
+    @Test
+    fun `nao deve buscar caso a chave caso os parametros sejam invalidos`() {
 
+        /* Executando requisição para endpoint
+        Será lançado uma exceção devidos aos parametros estarem vazios
+        Guardando a exceção na variavel para validação */
+        val assertThrow = assertThrows<StatusRuntimeException> {
+            grpcClient.buscaChavePorID(
+                BuscaChavePorIDPixRequest.newBuilder().build()
+            )
+        }
+
+        /* Validando a exceção e descrição lançada da mesma
+        Mapeamento do status e descriação foi deito na classe ConstraintViolationExceptionHandler */
+        with(assertThrow) {
+            Assertions.assertEquals(Status.INVALID_ARGUMENT.code, status.code)
+            Assertions.assertEquals("Dados inválidos", status.description)
+        }
     }
 
     private fun pix(): Pix {

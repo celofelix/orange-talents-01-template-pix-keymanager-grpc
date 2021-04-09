@@ -3,8 +3,8 @@ br.com.zup.pix.cadastra.$CadastraPixEndPointDefinitionClass
 br.com.zup.pix.busca.$$BuscaPorIDServiceDefinition$InterceptedDefinitionClass
 br.com.zup.pix.validacoes.$ValidChaveValidatorDefinitionClass
 br.com.zup.pix.exclui.$$ExcluiPixServiceDefinition$InterceptedDefinitionClass
-br.com.zup.pix.clients.$ContasClientesItauClient$InterceptedDefinitionClass
 br.com.zup.pix.busca.$$BuscaPorChaveEndPointDefinition$InterceptedDefinitionClass
+br.com.zup.pix.clients.$ContasClientesItauClient$InterceptedDefinitionClass
 br.com.zup.pix.busca.$$BuscaPorChaveServiceDefinition$InterceptedDefinitionClass
 br.com.zup.pix.busca.$BuscaPorChaveServiceDefinitionClass
 br.com.zup.pix.repositories.$PixRepository$InterceptedDefinitionClass

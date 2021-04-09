@@ -8,13 +8,15 @@ import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 import javax.transaction.Transactional
+import javax.validation.Valid
+import javax.validation.constraints.NotBlank
 
 @Validated
 @Singleton
 class BuscaPorIDService(@Inject val pixRepository: PixRepository) {
 
     @Transactional
-    fun busca(pixId: String?, clienteId: String?): Pix {
+    fun busca(@Valid @NotBlank pixId: String?, @Valid @NotBlank clienteId: String?): Pix {
 
         val idPix = pixId?.toLong()
         val idCliente = UUID.fromString(clienteId)
