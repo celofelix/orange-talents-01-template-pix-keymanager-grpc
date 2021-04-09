@@ -8,14 +8,14 @@ import br.com.zup.pix.itau.TipoChave
 import br.com.zup.pix.itau.TipoConta
 import br.com.zup.pix.repositories.PixRepository
 import io.grpc.ManagedChannel
+import io.grpc.Status
+import io.grpc.StatusRuntimeException
 import io.micronaut.context.annotation.Bean
 import io.micronaut.context.annotation.Factory
 import io.micronaut.grpc.annotation.GrpcChannel
 import io.micronaut.grpc.server.GrpcServerChannel
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
-import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.*
 import java.util.*
 
 @MicronautTest(transactional = false)
@@ -35,8 +35,13 @@ class BuscaChavePorIDEndPointTest(
         chave = repository.save(pix())
     }
 
+    @AfterEach
+    fun clean() {
+        repository.deleteAll()
+    }
+
     @Test
-    fun `deve buscar chave existente atraves de clienteID e pixID`() {
+    fun `deve buscar chave existente atraves de clienteID e pixID busca local`() {
 
         val pix = repository.findByIdAndClienteId(chave.id, chave.clienteId).get()
 
@@ -46,9 +51,6 @@ class BuscaChavePorIDEndPointTest(
                 .setPixId(chave.id.toString())
                 .build()
         )
-
-        println(response.clienteId)
-        
 
         with(response) {
             Assertions.assertEquals(pix.id.toString(), response.pixId)
@@ -62,9 +64,34 @@ class BuscaChavePorIDEndPointTest(
             Assertions.assertEquals(pix.conta.numero, response.conta.numeroConta)
             Assertions.assertEquals(pix.tipoDeConta.name, response.conta.tipo)
         }
-
     }
 
+    @Test
+    fun `deve lancar excecao caso chave nao exista`() {
+
+        /* Executando requisição para o endpoint com dados que não existentes
+        Guardando a exceção lançada na variavel para verificação */
+        val assertThrow = assertThrows<StatusRuntimeException> {
+            grpcClient.buscaChavePorID(
+                BuscaChavePorIDPixRequest.newBuilder()
+                    .setPixId("3")
+                    .setClienteId(UUID.randomUUID().toString())
+                    .build()
+            )
+        }
+
+        /* Validando o código da exceção lançada e também a mensagem da exceção
+        Mapeamento da exceção está sendo feito pela classe ChaveNaoExistenteHandler */
+        with(assertThrow) {
+            Assertions.assertEquals(Status.NOT_FOUND.code, status.code)
+            Assertions.assertEquals(
+                "Chave Pix não existe ou não pertence ao cliente informado",
+                status.description
+            )
+        }
+
+
+    }
 
     private fun pix(): Pix {
         return Pix(

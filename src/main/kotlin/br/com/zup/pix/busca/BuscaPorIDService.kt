@@ -21,7 +21,7 @@ class BuscaPorIDService(@Inject val pixRepository: PixRepository) {
 
         val pix = pixRepository.findByIdAndClienteId(idPix = idPix, idCliente = idCliente)
         if (pix.isEmpty) {
-            throw ContaNaoExistenteException("Chave Pix informada não existe ou não pertence ao cliente informado")
+            throw ContaNaoExistenteException("Chave Pix não existe ou não pertence ao cliente informado")
         }
         return pix.get()
     }

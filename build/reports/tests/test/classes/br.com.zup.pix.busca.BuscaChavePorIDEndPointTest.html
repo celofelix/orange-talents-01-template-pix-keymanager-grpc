@@ -23,7 +23,7 @@
 <tr>
 <td>
 <div class="infoBox" id="tests">
-<div class="counter">1</div>
+<div class="counter">2</div>
 <p>tests</p>
 </div>
 </td>
@@ -41,7 +41,7 @@
 </td>
 <td>
 <div class="infoBox" id="duration">
-<div class="counter">0.657s</div>
+<div class="counter">0.733s</div>
 <p>duration</p>
 </div>
 </td>
@@ -78,8 +78,13 @@
 </tr>
 </thead>
 <tr>
-<td class="success">deve buscar chave existente atraves de clienteID e pixID()</td>
-<td class="success">0.657s</td>
+<td class="success">deve buscar chave existente atraves de clienteID e pixID busca local()</td>
+<td class="success">0.033s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">deve lancar excecao caso chave nao exista()</td>
+<td class="success">0.700s</td>
 <td class="success">passed</td>
 </tr>
 </table>
@@ -87,13 +92,13 @@
 <div id="tab1" class="tab">
 <h2>Standard output</h2>
 <span class="code">
-<pre>?[36m10:46:37.905?[0;39m ?[1;30m[Test worker]?[0;39m ?[34mINFO ?[0;39m ?[35mi.m.context.env.DefaultEnvironment?[0;39m - Established active environments: [test]
-?[36m10:46:38.959?[0;39m ?[1;30m[Test worker]?[0;39m ?[34mINFO ?[0;39m ?[35mo.h.validator.internal.util.Version?[0;39m - HV000001: Hibernate Validator 6.1.6.Final
-?[36m10:46:39.171?[0;39m ?[1;30m[Test worker]?[0;39m ?[34mINFO ?[0;39m ?[35mcom.zaxxer.hikari.HikariDataSource?[0;39m - HikariPool-1 - Starting...
-?[36m10:46:39.370?[0;39m ?[1;30m[Test worker]?[0;39m ?[34mINFO ?[0;39m ?[35mcom.zaxxer.hikari.HikariDataSource?[0;39m - HikariPool-1 - Start completed.
-?[36m10:46:39.403?[0;39m ?[1;30m[Test worker]?[0;39m ?[34mINFO ?[0;39m ?[35morg.hibernate.Version?[0;39m - HHH000412: Hibernate ORM core version 5.4.24.Final
-?[36m10:46:39.642?[0;39m ?[1;30m[Test worker]?[0;39m ?[34mINFO ?[0;39m ?[35mo.h.annotations.common.Version?[0;39m - HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
-?[36m10:46:39.841?[0;39m ?[1;30m[Test worker]?[0;39m ?[34mINFO ?[0;39m ?[35morg.hibernate.dialect.Dialect?[0;39m - HHH000400: Using dialect: org.hibernate.dialect.H2Dialect
+<pre>?[36m12:06:22.664?[0;39m ?[1;30m[Test worker]?[0;39m ?[34mINFO ?[0;39m ?[35mi.m.context.env.DefaultEnvironment?[0;39m - Established active environments: [test]
+?[36m12:06:23.834?[0;39m ?[1;30m[Test worker]?[0;39m ?[34mINFO ?[0;39m ?[35mo.h.validator.internal.util.Version?[0;39m - HV000001: Hibernate Validator 6.1.6.Final
+?[36m12:06:24.087?[0;39m ?[1;30m[Test worker]?[0;39m ?[34mINFO ?[0;39m ?[35mcom.zaxxer.hikari.HikariDataSource?[0;39m - HikariPool-1 - Starting...
+?[36m12:06:24.306?[0;39m ?[1;30m[Test worker]?[0;39m ?[34mINFO ?[0;39m ?[35mcom.zaxxer.hikari.HikariDataSource?[0;39m - HikariPool-1 - Start completed.
+?[36m12:06:24.350?[0;39m ?[1;30m[Test worker]?[0;39m ?[34mINFO ?[0;39m ?[35morg.hibernate.Version?[0;39m - HHH000412: Hibernate ORM core version 5.4.24.Final
+?[36m12:06:24.615?[0;39m ?[1;30m[Test worker]?[0;39m ?[34mINFO ?[0;39m ?[35mo.h.annotations.common.Version?[0;39m - HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+?[36m12:06:24.850?[0;39m ?[1;30m[Test worker]?[0;39m ?[34mINFO ?[0;39m ?[35morg.hibernate.dialect.Dialect?[0;39m - HHH000400: Using dialect: org.hibernate.dialect.H2Dialect
 Hibernate: 
     
     create table pix (
@@ -145,6 +150,47 @@ Hibernate:
     where
         pix0_.id=? 
         and pix0_.cliente_id=?
+?[36m12:06:26.966?[0;39m ?[1;30m[io-executor-thread-1]?[0;39m ?[1;31mERROR?[0;39m ?[35mb.c.z.p.e.ExceptionHandlerInterceptor?[0;39m - Handling the exception 'br.com.zup.pix.excecoes.ContaNaoExistenteException' while processing the call: public void br.com.zup.pix.busca.BuscaChavePorIDEndPoint.buscaChavePorID(br.com.zup.BuscaChavePorIDPixRequest,io.grpc.stub.StreamObserver)
+br.com.zup.pix.excecoes.ContaNaoExistenteException: Chave Pix não existe ou não pertence ao cliente informado
+	at br.com.zup.pix.busca.BuscaPorIDService.busca(BuscaPorIDService.kt:24)
+	at br.com.zup.pix.busca.$BuscaPorIDServiceDefinition$Intercepted.$$access$$busca(Unknown Source)
+	at br.com.zup.pix.busca.$BuscaPorIDServiceDefinition$$exec1.invokeInternal(Unknown Source)
+	at io.micronaut.context.AbstractExecutableMethod.invoke(AbstractExecutableMethod.java:151)
+	at io.micronaut.aop.chain.MethodInterceptorChain.proceed(MethodInterceptorChain.java:87)
+	at io.micronaut.transaction.interceptor.TransactionalInterceptor.intercept(TransactionalInterceptor.java:134)
+	at io.micronaut.aop.chain.MethodInterceptorChain.proceed(MethodInterceptorChain.java:96)
+	at io.micronaut.validation.ValidatingInterceptor.validateReturnExecutableValidator(ValidatingInterceptor.java:152)
+	at io.micronaut.validation.ValidatingInterceptor.intercept(ValidatingInterceptor.java:100)
+	at io.micronaut.aop.chain.MethodInterceptorChain.proceed(MethodInterceptorChain.java:96)
+	at br.com.zup.pix.busca.$BuscaPorIDServiceDefinition$Intercepted.busca(Unknown Source)
+	at br.com.zup.pix.busca.BuscaChavePorIDEndPoint.buscaChavePorID(BuscaChavePorIDEndPoint.kt:20)
+	at br.com.zup.pix.busca.$BuscaChavePorIDEndPointDefinition$Intercepted.$$access$$buscaChavePorID(Unknown Source)
+	at br.com.zup.pix.busca.$BuscaChavePorIDEndPointDefinition$$exec1.invokeInternal(Unknown Source)
+	at io.micronaut.context.AbstractExecutableMethod.invoke(AbstractExecutableMethod.java:151)
+	at io.micronaut.aop.chain.MethodInterceptorChain.proceed(MethodInterceptorChain.java:87)
+	at br.com.zup.pix.excecoes.ExceptionHandlerInterceptor.intercept(ExceptionHandlerInterceptor.kt:18)
+	at io.micronaut.aop.chain.MethodInterceptorChain.proceed(MethodInterceptorChain.java:96)
+	at br.com.zup.pix.busca.$BuscaChavePorIDEndPointDefinition$Intercepted.buscaChavePorID(Unknown Source)
+	at br.com.zup.KeyManagerBuscaChavePorIDGrpcServiceGrpc$MethodHandlers.invoke(KeyManagerBuscaChavePorIDGrpcServiceGrpc.java:217)
+	at io.grpc.stub.ServerCalls$UnaryServerCallHandler$UnaryServerCallListener.onHalfClose(ServerCalls.java:182)
+	at io.grpc.internal.ServerCallImpl$ServerStreamListenerImpl.halfClosed(ServerCallImpl.java:331)
+	at io.grpc.internal.ServerImpl$JumpToApplicationThreadServerStreamListener$1HalfClosed.runInContext(ServerImpl.java:814)
+	at io.grpc.internal.ContextRunnable.run(ContextRunnable.java:37)
+	at io.grpc.internal.SerializingExecutor.run(SerializingExecutor.java:123)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1130)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:630)
+	at java.base/java.lang.Thread.run(Thread.java:832)
+Hibernate: 
+    delete 
+    from
+        pix
+Hibernate: 
+    insert 
+    into
+        pix
+        (id, chave, cliente_id, agencia, cpf, instituicao, ispb, nome, numero, criada_em, tipo_de_chave, tipo_de_conta) 
+    values
+        (null, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 Hibernate: 
     select
         pix0_.id as id1_0_,
@@ -164,8 +210,31 @@ Hibernate:
     where
         pix0_.id=? 
         and pix0_.cliente_id=?
-?[36m10:46:41.969?[0;39m ?[1;30m[Test worker]?[0;39m ?[34mINFO ?[0;39m ?[35mcom.zaxxer.hikari.HikariDataSource?[0;39m - HikariPool-1 - Shutdown initiated...
-?[36m10:46:41.971?[0;39m ?[1;30m[Test worker]?[0;39m ?[34mINFO ?[0;39m ?[35mcom.zaxxer.hikari.HikariDataSource?[0;39m - HikariPool-1 - Shutdown completed.
+Hibernate: 
+    select
+        pix0_.id as id1_0_,
+        pix0_.chave as chave2_0_,
+        pix0_.cliente_id as cliente_3_0_,
+        pix0_.agencia as agencia4_0_,
+        pix0_.cpf as cpf5_0_,
+        pix0_.instituicao as institui6_0_,
+        pix0_.ispb as ispb7_0_,
+        pix0_.nome as nome8_0_,
+        pix0_.numero as numero9_0_,
+        pix0_.criada_em as criada_10_0_,
+        pix0_.tipo_de_chave as tipo_de11_0_,
+        pix0_.tipo_de_conta as tipo_de12_0_ 
+    from
+        pix pix0_ 
+    where
+        pix0_.id=? 
+        and pix0_.cliente_id=?
+Hibernate: 
+    delete 
+    from
+        pix
+?[36m12:06:27.090?[0;39m ?[1;30m[Test worker]?[0;39m ?[34mINFO ?[0;39m ?[35mcom.zaxxer.hikari.HikariDataSource?[0;39m - HikariPool-1 - Shutdown initiated...
+?[36m12:06:27.092?[0;39m ?[1;30m[Test worker]?[0;39m ?[34mINFO ?[0;39m ?[35mcom.zaxxer.hikari.HikariDataSource?[0;39m - HikariPool-1 - Shutdown completed.
 </pre>
 </span>
 </div>
@@ -177,7 +246,7 @@ Hibernate:
 <input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
 </label>
 </div>Generated by 
-<a href="http://www.gradle.org">Gradle 6.8</a> at 9 de abr. de 2021 10:46:42</p>
+<a href="http://www.gradle.org">Gradle 6.8</a> at 9 de abr. de 2021 12:06:27</p>
 </div>
 </div>
 </body>
