@@ -20,12 +20,12 @@ import java.util.*
 
 @MicronautTest(transactional = false)
 class BuscaChavePorIDEndPointTest(
-    val repository: PixRepository,
-    val grpcClient: KeyManagerBuscaChavePorIDGrpcServiceGrpc.KeyManagerBuscaChavePorIDGrpcServiceBlockingStub
+    private val repository: PixRepository,
+    private val grpcClient: KeyManagerBuscaChavePorIDGrpcServiceGrpc.KeyManagerBuscaChavePorIDGrpcServiceBlockingStub
 ) {
 
     companion object {
-        val CLIENTE_ID = UUID.randomUUID()
+        val CLIENTE_ID: UUID = UUID.randomUUID()
     }
 
     private lateinit var chave: Pix
