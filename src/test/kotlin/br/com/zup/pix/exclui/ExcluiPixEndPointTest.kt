@@ -20,8 +20,6 @@ import io.micronaut.grpc.server.GrpcServerChannel
 import io.micronaut.http.HttpResponse
 import io.micronaut.test.annotation.MockBean
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
-import junit.framework.AssertionFailedError
-import org.hamcrest.MatcherAssert
 import org.junit.jupiter.api.*
 import org.mockito.Mockito
 import java.time.LocalDateTime
@@ -147,7 +145,6 @@ class ExcluiPixEndPointTest(
                 status.description
             )
         }
-
     }
 
     @Test
@@ -197,5 +194,4 @@ class ExcluiPixEndPointTest(
             )
         )
     }
-
 }
