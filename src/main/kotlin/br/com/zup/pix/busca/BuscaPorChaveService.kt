@@ -8,6 +8,8 @@ import io.micronaut.http.HttpStatus
 import io.micronaut.validation.Validated
 import javax.inject.Inject
 import javax.inject.Singleton
+import javax.validation.Valid
+import javax.validation.constraints.NotBlank
 
 @Validated
 @Singleton
@@ -16,9 +18,10 @@ class BuscaPorChaveService(
     @Inject val bcbClient: BancoCentralClient
 ) {
 
-    fun buscaChave(chave: String): Pix {
+    fun buscaChave(@Valid @NotBlank chave: String): Pix {
 
         val possivelChave = pixRepository.findByChave(chave)
+
         if (possivelChave.isEmpty) {
             val bcbChave = bcbClient.buscaPorChave(chave)
             println(bcbChave.body())

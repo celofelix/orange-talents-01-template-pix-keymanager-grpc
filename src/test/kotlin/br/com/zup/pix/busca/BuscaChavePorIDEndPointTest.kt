@@ -131,7 +131,9 @@ class BuscaChavePorIDEndPointTest(
     @Factory
     class Client {
         @Bean
-        fun client(@GrpcChannel(GrpcServerChannel.NAME) channel: ManagedChannel): KeyManagerBuscaChavePorIDGrpcServiceGrpc.KeyManagerBuscaChavePorIDGrpcServiceBlockingStub {
+        fun client(@GrpcChannel(GrpcServerChannel.NAME) channel: ManagedChannel):
+                KeyManagerBuscaChavePorIDGrpcServiceGrpc.KeyManagerBuscaChavePorIDGrpcServiceBlockingStub {
+
             return KeyManagerBuscaChavePorIDGrpcServiceGrpc.newBlockingStub(channel)
         }
     }
