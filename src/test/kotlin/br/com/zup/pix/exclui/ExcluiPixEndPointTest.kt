@@ -120,6 +120,34 @@ class ExcluiPixEndPointTest(
         }
     }
 
+    @Test
+    fun `nao deve excluir se a chave nao existir ou nao pertencer ao cliente`() {
+
+        /* Criando um ID diferentedo que foi salvo anteriormente no repository */
+        val clienteInvalidoID = UUID.randomUUID().toString()
+
+        /* Executando a requisição ao endpoint e guardando a exceção lançada*/
+        val assertThrow = assertThrows<StatusRuntimeException> {
+            grpcClient.exclui(
+                ExcluiChavePixRequest.newBuilder()
+                    .setPixId(chave.id.toString())
+                    .setClienteId(clienteInvalidoID)
+                    .build()
+            )
+        }
+
+        /* Validando o status da exceção lançada no endpoint
+        O status code está mapeado na classe ChaveNaoExistenteHandler */
+        with(assertThrow) {
+            Assertions.assertEquals(Status.NOT_FOUND.code, status.code)
+            Assertions.assertEquals(
+                "Chave Pix informada não existe ou não pertence ao cliente informado",
+                status.description
+            )
+        }
+
+    }
+
     @MockBean(BancoCentralClient::class)
     fun bcbClient(): BancoCentralClient? {
         return Mockito.mock(BancoCentralClient::class.java)

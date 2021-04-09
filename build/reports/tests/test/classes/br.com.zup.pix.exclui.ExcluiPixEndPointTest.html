@@ -41,7 +41,7 @@
 </td>
 <td>
 <div class="infoBox" id="duration">
-<div class="counter">0.989s</div>
+<div class="counter">1.003s</div>
 <p>duration</p>
 </div>
 </td>
@@ -78,8 +78,8 @@
 </tr>
 </thead>
 <tr>
-<td class="success">nao deve remover chave pix se ocorrer erro no servico bcb()</td>
-<td class="success">0.989s</td>
+<td class="success">nao deve excluir se a chave nao existir ou nao pertencer ao cliente()</td>
+<td class="success">1.003s</td>
 <td class="success">passed</td>
 </tr>
 </table>
@@ -87,13 +87,13 @@
 <div id="tab1" class="tab">
 <h2>Standard output</h2>
 <span class="code">
-<pre>?[36m21:23:36.880?[0;39m ?[1;30m[Test worker]?[0;39m ?[34mINFO ?[0;39m ?[35mi.m.context.env.DefaultEnvironment?[0;39m - Established active environments: [test]
-?[36m21:23:37.872?[0;39m ?[1;30m[Test worker]?[0;39m ?[34mINFO ?[0;39m ?[35mo.h.validator.internal.util.Version?[0;39m - HV000001: Hibernate Validator 6.1.6.Final
-?[36m21:23:38.064?[0;39m ?[1;30m[Test worker]?[0;39m ?[34mINFO ?[0;39m ?[35mcom.zaxxer.hikari.HikariDataSource?[0;39m - HikariPool-1 - Starting...
-?[36m21:23:38.252?[0;39m ?[1;30m[Test worker]?[0;39m ?[34mINFO ?[0;39m ?[35mcom.zaxxer.hikari.HikariDataSource?[0;39m - HikariPool-1 - Start completed.
-?[36m21:23:38.284?[0;39m ?[1;30m[Test worker]?[0;39m ?[34mINFO ?[0;39m ?[35morg.hibernate.Version?[0;39m - HHH000412: Hibernate ORM core version 5.4.24.Final
-?[36m21:23:38.490?[0;39m ?[1;30m[Test worker]?[0;39m ?[34mINFO ?[0;39m ?[35mo.h.annotations.common.Version?[0;39m - HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
-?[36m21:23:38.662?[0;39m ?[1;30m[Test worker]?[0;39m ?[34mINFO ?[0;39m ?[35morg.hibernate.dialect.Dialect?[0;39m - HHH000400: Using dialect: org.hibernate.dialect.H2Dialect
+<pre>?[36m21:37:57.304?[0;39m ?[1;30m[Test worker]?[0;39m ?[34mINFO ?[0;39m ?[35mi.m.context.env.DefaultEnvironment?[0;39m - Established active environments: [test]
+?[36m21:37:58.449?[0;39m ?[1;30m[Test worker]?[0;39m ?[34mINFO ?[0;39m ?[35mo.h.validator.internal.util.Version?[0;39m - HV000001: Hibernate Validator 6.1.6.Final
+?[36m21:37:58.654?[0;39m ?[1;30m[Test worker]?[0;39m ?[34mINFO ?[0;39m ?[35mcom.zaxxer.hikari.HikariDataSource?[0;39m - HikariPool-1 - Starting...
+?[36m21:37:58.833?[0;39m ?[1;30m[Test worker]?[0;39m ?[34mINFO ?[0;39m ?[35mcom.zaxxer.hikari.HikariDataSource?[0;39m - HikariPool-1 - Start completed.
+?[36m21:37:58.862?[0;39m ?[1;30m[Test worker]?[0;39m ?[34mINFO ?[0;39m ?[35morg.hibernate.Version?[0;39m - HHH000412: Hibernate ORM core version 5.4.24.Final
+?[36m21:37:59.076?[0;39m ?[1;30m[Test worker]?[0;39m ?[34mINFO ?[0;39m ?[35mo.h.annotations.common.Version?[0;39m - HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+?[36m21:37:59.248?[0;39m ?[1;30m[Test worker]?[0;39m ?[34mINFO ?[0;39m ?[35morg.hibernate.dialect.Dialect?[0;39m - HHH000400: Using dialect: org.hibernate.dialect.H2Dialect
 Hibernate: 
     
     create table pix (
@@ -145,16 +145,9 @@ Hibernate:
     where
         pix0_.id=? 
         and pix0_.cliente_id=?
-Hibernate: 
-    delete 
-    from
-        pix 
-    where
-        id=?
-io.micronaut.http.simple.SimpleHttpResponse@72908fd
-?[36m21:23:40.832?[0;39m ?[1;30m[io-executor-thread-1]?[0;39m ?[1;31mERROR?[0;39m ?[35mb.c.z.p.e.ExceptionHandlerInterceptor?[0;39m - Handling the exception 'br.com.zup.pix.excecoes.ChaveNaoExistenteException' while processing the call: public void br.com.zup.pix.exclui.ExcluiPixEndPoint.exclui(br.com.zup.ExcluiChavePixRequest,io.grpc.stub.StreamObserver)
-br.com.zup.pix.excecoes.ChaveNaoExistenteException: Não foi possível deletar a sua chave pix no Banco Central
-	at br.com.zup.pix.exclui.ExcluiPixService.remove(ExcluiPixService.kt:48)
+?[36m21:38:01.504?[0;39m ?[1;30m[io-executor-thread-1]?[0;39m ?[1;31mERROR?[0;39m ?[35mb.c.z.p.e.ExceptionHandlerInterceptor?[0;39m - Handling the exception 'br.com.zup.pix.excecoes.ContaNaoExistenteException' while processing the call: public void br.com.zup.pix.exclui.ExcluiPixEndPoint.exclui(br.com.zup.ExcluiChavePixRequest,io.grpc.stub.StreamObserver)
+br.com.zup.pix.excecoes.ContaNaoExistenteException: Chave Pix informada não existe ou não pertence ao cliente informado
+	at br.com.zup.pix.exclui.ExcluiPixService.remove(ExcluiPixService.kt:35)
 	at br.com.zup.pix.exclui.$ExcluiPixServiceDefinition$Intercepted.$$access$$remove(Unknown Source)
 	at br.com.zup.pix.exclui.$ExcluiPixServiceDefinition$$exec1.invokeInternal(Unknown Source)
 	at io.micronaut.context.AbstractExecutableMethod.invoke(AbstractExecutableMethod.java:151)
@@ -186,8 +179,8 @@ Hibernate:
     delete 
     from
         pix
-?[36m21:23:40.897?[0;39m ?[1;30m[Test worker]?[0;39m ?[34mINFO ?[0;39m ?[35mcom.zaxxer.hikari.HikariDataSource?[0;39m - HikariPool-1 - Shutdown initiated...
-?[36m21:23:40.899?[0;39m ?[1;30m[Test worker]?[0;39m ?[34mINFO ?[0;39m ?[35mcom.zaxxer.hikari.HikariDataSource?[0;39m - HikariPool-1 - Shutdown completed.
+?[36m21:38:01.575?[0;39m ?[1;30m[Test worker]?[0;39m ?[34mINFO ?[0;39m ?[35mcom.zaxxer.hikari.HikariDataSource?[0;39m - HikariPool-1 - Shutdown initiated...
+?[36m21:38:01.577?[0;39m ?[1;30m[Test worker]?[0;39m ?[34mINFO ?[0;39m ?[35mcom.zaxxer.hikari.HikariDataSource?[0;39m - HikariPool-1 - Shutdown completed.
 </pre>
 </span>
 </div>
@@ -199,7 +192,7 @@ Hibernate:
 <input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
 </label>
 </div>Generated by 
-<a href="http://www.gradle.org">Gradle 6.8</a> at 8 de abr. de 2021 21:23:41</p>
+<a href="http://www.gradle.org">Gradle 6.8</a> at 8 de abr. de 2021 21:38:02</p>
 </div>
 </div>
 </body>
