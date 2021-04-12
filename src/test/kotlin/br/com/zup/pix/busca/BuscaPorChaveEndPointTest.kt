@@ -81,19 +81,22 @@ class BuscaPorChaveEndPointTest(
     @Test
     fun `deve buscar chave no servico do BCB e nao localmente`() {
 
+        /* Criando objeto que servirá de resposta do serviço do BCB */
         val pixResponse = pixKeyDetailsResponse()
 
+        /* Simulando a requisição e retorno do serviço externo do BCB
+        O retorno é o objeto pixResponse criado para simular a resposta */
         Mockito.`when`(bcbClient.buscaPorChave("chaveoutrobanco@gmail.com"))
-                .thenReturn(
-                        HttpResponse.ok(pixResponse)
-                )
+                .thenReturn(HttpResponse.ok(pixResponse))
 
+        /* Executando requisição para o endpoint GRPC com chave existente apenas no BCB  */
         val buscaPorChave = grpcClient.buscaPorChave(
                 BuscaPorChavePixRequest.newBuilder()
                         .setChave("chaveoutrobanco@gmail.com")
                         .build()
         )
 
+        /* Validando os dados da resposta do serviço externo BCB */
         with(buscaPorChave) {
             Assertions.assertEquals(pixResponse.keyType.name, tipoDeChave)
             Assertions.assertEquals(pixResponse.key, chave)
@@ -103,22 +106,26 @@ class BuscaPorChaveEndPointTest(
             Assertions.assertEquals(pixResponse.bankAccount.branch, conta.agencia)
             Assertions.assertEquals(pixResponse.bankAccount.accountNumber, conta.numeroConta)
         }
-
     }
 
     @Test
     fun `deve lancar excecao ao buscar chave inexistente localmente ou no BCB`() {
 
+        /* Simulando o comportamento e resposta do serviço do BCB ao buscar chave inexistente
+        Nesse caso será retornado o status Not Found para simular uma chave não existente */
         Mockito.`when`(bcbClient.buscaPorChave("chavenaoexistente@gmail.com"))
                 .thenReturn(HttpResponse.notFound())
 
+        /* Executando requisição para o endpoint GRCP com chave inexistente no BCB ou localmente
+        Guardando o retorno da exceção lançada na variavel para verificação */
         val assertThrow = assertThrows<StatusRuntimeException> {
             grpcClient.buscaPorChave(BuscaPorChavePixRequest.newBuilder()
                     .setChave("chavenaoexistente@gmail.com")
                     .build())
         }
 
-        with(assertThrow){
+        /* Validando o código de resposta da exceção lançada e sua descrição */
+        with(assertThrow) {
             Assertions.assertEquals(Status.NOT_FOUND.code, status.code)
             Assertions.assertEquals("Chave não encontrada", status.description)
         }
