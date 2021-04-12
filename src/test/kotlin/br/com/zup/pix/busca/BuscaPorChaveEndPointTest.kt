@@ -108,9 +108,9 @@ class BuscaPorChaveEndPointTest(
 
     @Test
     fun `deve lancar excecao ao buscar chave inexistente localmente ou no BCB`() {
-        
+
         Mockito.`when`(bcbClient.buscaPorChave("chavenaoexistente@gmail.com"))
-                .thenReturn(HttpResponse.badRequest())
+                .thenReturn(HttpResponse.notFound())
 
         val assertThrow = assertThrows<StatusRuntimeException> {
             grpcClient.buscaPorChave(BuscaPorChavePixRequest.newBuilder()
