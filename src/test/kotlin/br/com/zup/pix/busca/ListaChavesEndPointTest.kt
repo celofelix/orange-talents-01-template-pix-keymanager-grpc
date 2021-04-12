@@ -28,8 +28,8 @@ class ListaChavesEndPointTest(
         val CLIENTE_ID: UUID = UUID.randomUUID()
     }
 
-    private lateinit var pix1 : Pix
-    private lateinit var pix2 : Pix
+    private lateinit var pix1: Pix
+    private lateinit var pix2: Pix
 
     @BeforeEach
     fun set() {
@@ -69,6 +69,25 @@ class ListaChavesEndPointTest(
             Assertions.assertEquals(pix2.clienteId.toString(), getClienteId())
             Assertions.assertEquals(pix2.chave, getChaves(1).chave)
             Assertions.assertEquals(pix2.tipoDeChave.name, getChaves(1).tipoChave)
+        }
+    }
+
+    @Test
+    fun `deve retornar uma lista vazia caso o cliente nao possua chaves cadastradas`() {
+
+        /* Criando uma chave aleátoria para simular um cliente que não possui chave cadastrada */
+        val clienteIDSemChave = UUID.randomUUID().toString()
+
+        /* Executando requisição para o cliente gRPC que lista as chaves por ID do cliente
+        Será retornado uma lista vazia, cliente passado não possui chaves cadastradas */
+        val listaChaves = grpcClient.listaChaves(ListaChavesPixRequest.newBuilder()
+                .setClienteId(clienteIDSemChave)
+                .build())
+
+        /* Validando o tamanho da lista retornada
+        Deve ser 0 por estar vazia */
+        with(listaChaves) {
+            Assertions.assertEquals(0, listaChaves.chavesCount)
         }
     }
 
