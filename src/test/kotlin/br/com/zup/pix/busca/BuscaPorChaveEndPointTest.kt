@@ -10,6 +10,8 @@ import br.com.zup.pix.itau.TipoChave
 import br.com.zup.pix.itau.TipoConta
 import br.com.zup.pix.repositories.PixRepository
 import io.grpc.ManagedChannel
+import io.grpc.Status
+import io.grpc.StatusRuntimeException
 import io.micronaut.context.annotation.Bean
 import io.micronaut.context.annotation.Factory
 import io.micronaut.grpc.annotation.GrpcChannel
@@ -17,10 +19,7 @@ import io.micronaut.grpc.server.GrpcServerChannel
 import io.micronaut.http.HttpResponse
 import io.micronaut.test.annotation.MockBean
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.*
 import org.mockito.Mockito
 import java.time.LocalDateTime
 import java.util.*
@@ -28,9 +27,8 @@ import javax.inject.Inject
 
 @MicronautTest(transactional = false)
 class BuscaPorChaveEndPointTest(
-    private val repository: PixRepository,
-    private val grpcClient: KeyManagerBuscaChaveGrpcServiceGrpc.KeyManagerBuscaChaveGrpcServiceBlockingStub
-
+        private val repository: PixRepository,
+        private val grpcClient: KeyManagerBuscaChaveGrpcServiceGrpc.KeyManagerBuscaChaveGrpcServiceBlockingStub
 ) {
 
     companion object {
@@ -42,11 +40,6 @@ class BuscaPorChaveEndPointTest(
     @BeforeEach
     fun save() {
         pix = repository.save(chave())
-    }
-
-    @AfterEach
-    fun clean() {
-        repository.deleteAll()
     }
 
     @Inject
@@ -63,9 +56,9 @@ class BuscaPorChaveEndPointTest(
         Irá retornar um response com os dados do banco local
         Sem buscar no serviço do BCB */
         val buscaPorChave = grpcClient.buscaPorChave(
-            BuscaPorChavePixRequest.newBuilder()
-                .setChave(pixFound.chave)
-                .build()
+                BuscaPorChavePixRequest.newBuilder()
+                        .setChave(pixFound.chave)
+                        .build()
         )
 
         /* Validando os dados salvos no banco com o retornado
@@ -91,14 +84,14 @@ class BuscaPorChaveEndPointTest(
         val pixResponse = pixKeyDetailsResponse()
 
         Mockito.`when`(bcbClient.buscaPorChave("chaveoutrobanco@gmail.com"))
-            .thenReturn(
-                HttpResponse.ok(pixResponse)
-            )
+                .thenReturn(
+                        HttpResponse.ok(pixResponse)
+                )
 
         val buscaPorChave = grpcClient.buscaPorChave(
-            BuscaPorChavePixRequest.newBuilder()
-                .setChave("chaveoutrobanco@gmail.com")
-                .build()
+                BuscaPorChavePixRequest.newBuilder()
+                        .setChave("chaveoutrobanco@gmail.com")
+                        .build()
         )
 
         with(buscaPorChave) {
@@ -111,6 +104,24 @@ class BuscaPorChaveEndPointTest(
             Assertions.assertEquals(pixResponse.bankAccount.accountNumber, conta.numeroConta)
         }
 
+    }
+
+    @Test
+    fun `deve lancar excecao ao buscar chave inexistente localmente ou no BCB`() {
+        
+        Mockito.`when`(bcbClient.buscaPorChave("chavenaoexistente@gmail.com"))
+                .thenReturn(HttpResponse.badRequest())
+
+        val assertThrow = assertThrows<StatusRuntimeException> {
+            grpcClient.buscaPorChave(BuscaPorChavePixRequest.newBuilder()
+                    .setChave("chavenaoexistente@gmail.com")
+                    .build())
+        }
+
+        with(assertThrow){
+            Assertions.assertEquals(Status.NOT_FOUND.code, status.code)
+            Assertions.assertEquals("Chave não encontrada", status.description)
+        }
     }
 
     @MockBean(BancoCentralClient::class)
@@ -130,37 +141,37 @@ class BuscaPorChaveEndPointTest(
 
     private fun chave(): Pix {
         return Pix(
-            clienteId = CLIENTE_ID,
-            tipoDeChave = TipoChave.EMAIL,
-            chave = "marcelo@gmail.com",
-            tipoDeConta = TipoConta.CONTA_CORRENTE,
-            conta = Conta(
-                instituicao = "ITAÚ UNIBANCO S.A.",
-                ispb = "60701190",
-                agencia = "0001",
-                numero = "291900",
-                nome = "Marcelo Felix",
-                cpf = "02467781054"
-            )
+                clienteId = CLIENTE_ID,
+                tipoDeChave = TipoChave.EMAIL,
+                chave = "marcelo@gmail.com",
+                tipoDeConta = TipoConta.CONTA_CORRENTE,
+                conta = Conta(
+                        instituicao = "ITAÚ UNIBANCO S.A.",
+                        ispb = "60701190",
+                        agencia = "0001",
+                        numero = "291900",
+                        nome = "Marcelo Felix",
+                        cpf = "02467781054"
+                )
         )
     }
 
     private fun pixKeyDetailsResponse(): PixKeyDetailsResponse {
         return PixKeyDetailsResponse(
-            keyType = KeyType.EMAIL,
-            key = "chaveoutrobanco@gmail.com",
-            bankAccount = BankAccount(
-                participant = "60701190",
-                branch = "0001",
-                accountNumber = "291900",
-                accountType = AccountType.CACC
-            ),
-            owner = Owner(
-                type = Owner.OwnerType.NATURAL_PERSON,
-                name = "Marcelo Felix",
-                taxIdNumber = "02467781054"
-            ),
-            createdAt = LocalDateTime.now()
+                keyType = KeyType.EMAIL,
+                key = "chaveoutrobanco@gmail.com",
+                bankAccount = BankAccount(
+                        participant = "60701190",
+                        branch = "0001",
+                        accountNumber = "291900",
+                        accountType = AccountType.CACC
+                ),
+                owner = Owner(
+                        type = Owner.OwnerType.NATURAL_PERSON,
+                        name = "Marcelo Felix",
+                        taxIdNumber = "02467781054"
+                ),
+                createdAt = LocalDateTime.now()
         )
     }
 }

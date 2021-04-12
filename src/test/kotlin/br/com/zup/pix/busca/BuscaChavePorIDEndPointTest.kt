@@ -133,7 +133,6 @@ class BuscaChavePorIDEndPointTest(
         @Bean
         fun client(@GrpcChannel(GrpcServerChannel.NAME) channel: ManagedChannel):
                 KeyManagerBuscaChavePorIDGrpcServiceGrpc.KeyManagerBuscaChavePorIDGrpcServiceBlockingStub {
-
             return KeyManagerBuscaChavePorIDGrpcServiceGrpc.newBlockingStub(channel)
         }
     }

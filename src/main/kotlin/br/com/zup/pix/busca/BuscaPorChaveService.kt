@@ -24,7 +24,6 @@ class BuscaPorChaveService(
 
         if (possivelChave.isEmpty) {
             val bcbChave = bcbClient.buscaPorChave(chave)
-            println(bcbChave.body())
             if (bcbChave.status != HttpStatus.OK) {
                 throw ChaveNaoExistenteException("Chave não encontrada")
             }
