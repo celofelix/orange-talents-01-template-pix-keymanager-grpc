@@ -31,7 +31,7 @@ import javax.inject.Inject
 @MicronautTest(transactional = false)
 class CadastraPixEndPointTest(
     val repository: PixRepository,
-    val grpcCliente: KeyManagerCadastraGrpcServiceGrpc.KeyManagerCadastraGrpcServiceBlockingStub
+    val grpcClient: KeyManagerCadastraGrpcServiceGrpc.KeyManagerCadastraGrpcServiceBlockingStub
 ) {
 
     @Inject
@@ -62,7 +62,7 @@ class CadastraPixEndPointTest(
             .thenReturn(HttpResponse.created(chavePixKeyResponse()))
 
         /* Executando a requisição para o método do endpoint */
-        val response = grpcCliente.registra(
+        val response = grpcClient.registra(
             CadastraChavePixRequest.newBuilder()
                 .setClienteId(CLIENTE_ID.toString())
                 .setTipoDeChave(TipoDeChave.EMAIL)
@@ -88,7 +88,7 @@ class CadastraPixEndPointTest(
         Guardando o retorno da exceção na variavel para ser verificada
         Deve ser a StatusRunTimeException pq é o tipo de exception que o grpc lança */
         val assertThrow = assertThrows<StatusRuntimeException> {
-            grpcCliente.registra(
+            grpcClient.registra(
                 CadastraChavePixRequest.newBuilder()
                     .setClienteId(CLIENTE_ID.toString())
                     .setTipoDeChave(TipoDeChave.EMAIL)
@@ -116,7 +116,7 @@ class CadastraPixEndPointTest(
 
         /* Silumando a requisição para o endpoint com o retorno de  */
         val assertThrow = assertThrows<StatusRuntimeException> {
-            grpcCliente.registra(
+            grpcClient.registra(
                 CadastraChavePixRequest.newBuilder()
                     .setClienteId(CLIENTE_ID.toString())
                     .setTipoDeChave(TipoDeChave.EMAIL)
@@ -140,7 +140,7 @@ class CadastraPixEndPointTest(
 
         /* Simulando o envio de um objeto vazio sem os parâmetros */
         val assertThrow = assertThrows<StatusRuntimeException> {
-            grpcCliente.registra(
+            grpcClient.registra(
                 CadastraChavePixRequest.newBuilder()
                     .build()
             )

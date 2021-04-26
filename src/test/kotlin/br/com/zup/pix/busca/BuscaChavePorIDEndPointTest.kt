@@ -20,8 +20,8 @@ import java.util.*
 
 @MicronautTest(transactional = false)
 class BuscaChavePorIDEndPointTest(
-    private val repository: PixRepository,
-    private val grpcClient: KeyManagerBuscaChavePorIDGrpcServiceGrpc.KeyManagerBuscaChavePorIDGrpcServiceBlockingStub
+    val repository: PixRepository,
+    val grpcClient: KeyManagerBuscaChavePorIDGrpcServiceGrpc.KeyManagerBuscaChavePorIDGrpcServiceBlockingStub
 ) {
 
     companion object {

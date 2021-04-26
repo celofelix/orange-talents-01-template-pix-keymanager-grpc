@@ -3,8 +3,8 @@ br.com.zup.pix.cadastra.$CadastraPixEndPointDefinitionClass
 br.com.zup.pix.busca.$$BuscaPorIDServiceDefinition$InterceptedDefinitionClass
 br.com.zup.pix.validacoes.$ValidChaveValidatorDefinitionClass
 br.com.zup.pix.exclui.$$ExcluiPixServiceDefinition$InterceptedDefinitionClass
-br.com.zup.pix.clients.$ContasClientesItauClient$InterceptedDefinitionClass
 br.com.zup.pix.busca.$$BuscaPorChaveEndPointDefinition$InterceptedDefinitionClass
+br.com.zup.pix.clients.$ContasClientesItauClient$InterceptedDefinitionClass
 br.com.zup.pix.busca.$$BuscaPorChaveServiceDefinition$InterceptedDefinitionClass
 br.com.zup.pix.busca.$BuscaPorChaveServiceDefinitionClass
 br.com.zup.pix.repositories.$PixRepository$InterceptedDefinitionClass
@@ -20,8 +20,8 @@ br.com.zup.pix.busca.$BuscaPorIDServiceDefinitionClass
 br.com.zup.pix.cadastra.$$CadastraPixEndPointDefinition$InterceptedDefinitionClass
 br.com.zup.pix.excecoes.$ChaveNaoExistenteHandlerDefinitionClass
 br.com.zup.pix.busca.$BuscaPorChaveEndPointDefinitionClass
-br.com.zup.pix.exclui.$$ExcluiPixEndPointDefinition$InterceptedDefinitionClass
 br.com.zup.pix.excecoes.$ContaNaoExistenteHandlerDefinitionClass
+br.com.zup.pix.exclui.$$ExcluiPixEndPointDefinition$InterceptedDefinitionClass
 br.com.zup.pix.excecoes.$ExceptionHandlerResolverDefinitionClass
 br.com.zup.pix.busca.$BuscaChavePorIDEndPointDefinitionClass
 br.com.zup.pix.exclui.$ExcluiPixServiceDefinitionClass

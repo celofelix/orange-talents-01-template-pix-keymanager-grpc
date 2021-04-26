@@ -13,6 +13,7 @@ import io.micronaut.context.annotation.Factory
 import io.micronaut.grpc.annotation.GrpcChannel
 import io.micronaut.grpc.server.GrpcServerChannel
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -20,8 +21,8 @@ import java.util.*
 
 @MicronautTest(transactional = false)
 class ListaChavesEndPointTest(
-        val repository: PixRepository,
-        val grpcClient: KeyManagerListaChavesGrpcServiceGrpc.KeyManagerListaChavesGrpcServiceBlockingStub
+    val repository: PixRepository,
+    val grpcClient: KeyManagerListaChavesGrpcServiceGrpc.KeyManagerListaChavesGrpcServiceBlockingStub
 ) {
 
     companion object {
@@ -35,6 +36,11 @@ class ListaChavesEndPointTest(
     fun set() {
         pix1 = repository.save(chave(tipoChave = TipoChave.EMAIL, chave = "marcelo@gmail.com"))
         pix2 = repository.save(chave(tipoChave = TipoChave.ALEATORIA, chave = UUID.randomUUID().toString()))
+    }
+
+    @AfterEach
+    fun tearDown() {
+        repository.deleteAll()
     }
 
     @Test

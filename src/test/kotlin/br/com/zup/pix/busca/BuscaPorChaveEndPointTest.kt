@@ -27,8 +27,8 @@ import javax.inject.Inject
 
 @MicronautTest(transactional = false)
 class BuscaPorChaveEndPointTest(
-        private val repository: PixRepository,
-        private val grpcClient: KeyManagerBuscaChaveGrpcServiceGrpc.KeyManagerBuscaChaveGrpcServiceBlockingStub
+        val repository: PixRepository,
+        val grpcClient: KeyManagerBuscaChaveGrpcServiceGrpc.KeyManagerBuscaChaveGrpcServiceBlockingStub
 ) {
 
     companion object {
@@ -40,6 +40,11 @@ class BuscaPorChaveEndPointTest(
     @BeforeEach
     fun save() {
         pix = repository.save(chave())
+    }
+
+    @AfterEach
+    fun setDelete() {
+        repository.deleteAll()
     }
 
     @Inject
