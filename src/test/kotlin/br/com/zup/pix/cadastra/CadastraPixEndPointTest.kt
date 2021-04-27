@@ -30,8 +30,8 @@ import javax.inject.Inject
 
 @MicronautTest(transactional = false)
 class CadastraPixEndPointTest(
-    val repository: PixRepository,
-    val grpcClient: KeyManagerCadastraGrpcServiceGrpc.KeyManagerCadastraGrpcServiceBlockingStub
+    private val repository: PixRepository,
+    private val grpcClient: KeyManagerCadastraGrpcServiceGrpc.KeyManagerCadastraGrpcServiceBlockingStub
 ) {
 
     @Inject

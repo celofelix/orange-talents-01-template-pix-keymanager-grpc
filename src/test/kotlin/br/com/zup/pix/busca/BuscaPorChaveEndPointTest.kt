@@ -2,6 +2,7 @@ package br.com.zup.pix.busca
 
 import br.com.zup.BuscaPorChavePixRequest
 import br.com.zup.KeyManagerBuscaChaveGrpcServiceGrpc
+import br.com.zup.KeyManagerBuscaChavePorIDGrpcServiceGrpc
 import br.com.zup.pix.bcb.*
 import br.com.zup.pix.clients.BancoCentralClient
 import br.com.zup.pix.itau.Conta
@@ -27,8 +28,8 @@ import javax.inject.Inject
 
 @MicronautTest(transactional = false)
 class BuscaPorChaveEndPointTest(
-        val repository: PixRepository,
-        val grpcClient: KeyManagerBuscaChaveGrpcServiceGrpc.KeyManagerBuscaChaveGrpcServiceBlockingStub
+    private val repository: PixRepository,
+    private val grpcClient: KeyManagerBuscaChaveGrpcServiceGrpc.KeyManagerBuscaChaveGrpcServiceBlockingStub
 ) {
 
     companion object {
@@ -146,7 +147,6 @@ class BuscaPorChaveEndPointTest(
         @Bean
         fun client(@GrpcChannel(GrpcServerChannel.NAME) channel: ManagedChannel):
                 KeyManagerBuscaChaveGrpcServiceGrpc.KeyManagerBuscaChaveGrpcServiceBlockingStub {
-
             return KeyManagerBuscaChaveGrpcServiceGrpc.newBlockingStub(channel)
         }
     }

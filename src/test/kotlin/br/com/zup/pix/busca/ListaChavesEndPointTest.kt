@@ -21,8 +21,8 @@ import java.util.*
 
 @MicronautTest(transactional = false)
 class ListaChavesEndPointTest(
-    val repository: PixRepository,
-    val grpcClient: KeyManagerListaChavesGrpcServiceGrpc.KeyManagerListaChavesGrpcServiceBlockingStub
+    private val repository: PixRepository,
+    private val grpc: KeyManagerListaChavesGrpcServiceGrpc.KeyManagerListaChavesGrpcServiceBlockingStub
 ) {
 
     companion object {
@@ -51,7 +51,7 @@ class ListaChavesEndPointTest(
         /* Executando requisição para o endpoint gRPC responsável por listar as chaves
         Enviando a mesma chave salva nos objetos pix salvos anteriormente
         A resposta irá ser uma lista com 2 objetos dentro */
-        val listaChaves = grpcClient.listaChaves(ListaChavesPixRequest.newBuilder()
+        val listaChaves = grpc.listaChaves(ListaChavesPixRequest.newBuilder()
                 .setClienteId(clienteId)
                 .build())
 
@@ -86,7 +86,7 @@ class ListaChavesEndPointTest(
 
         /* Executando requisição para o cliente gRPC que lista as chaves por ID do cliente
         Será retornado uma lista vazia, cliente passado não possui chaves cadastradas */
-        val listaChaves = grpcClient.listaChaves(ListaChavesPixRequest.newBuilder()
+        val listaChaves = grpc.listaChaves(ListaChavesPixRequest.newBuilder()
                 .setClienteId(clienteIDSemChave)
                 .build())
 
@@ -101,7 +101,8 @@ class ListaChavesEndPointTest(
     @Factory
     class Client {
         @Bean
-        fun client(@GrpcChannel(GrpcServerChannel.NAME) channel: ManagedChannel): KeyManagerListaChavesGrpcServiceGrpc.KeyManagerListaChavesGrpcServiceBlockingStub {
+        fun client(@GrpcChannel(GrpcServerChannel.NAME) channel: ManagedChannel):
+                KeyManagerListaChavesGrpcServiceGrpc.KeyManagerListaChavesGrpcServiceBlockingStub {
             return KeyManagerListaChavesGrpcServiceGrpc.newBlockingStub(channel)
         }
     }
